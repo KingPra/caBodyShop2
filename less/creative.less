@@ -165,7 +165,7 @@ header {
     min-height: auto;
     .background-cover;
     background-position: center;
-    background-image: url('../img/header.jpg');
+    background-image: url('../img/pdrDark.jpg');
     text-align: center;
     color: white;
     .header-content {
@@ -241,6 +241,11 @@ header {
     display: block;
     max-width: 650px;
     margin: 0 auto;
+    // added this line to resize all img's to same size
+    .img-responsive {
+      height: 550px;
+      object-fit: cover;
+    }
     .portfolio-box-caption {
         color: white;
         opacity: 0;
@@ -358,4 +363,10 @@ img::-moz-selection {
 
 body {
     webkit-tap-highlight-color: @gray-darker;
+}
+
+footer {
+  padding-top: 20px;
+  margin-right: 1%;
+  text-align: right;
 }
