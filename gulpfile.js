@@ -18,6 +18,7 @@ var banner = ['/*!\n',
     ''
 ].join('');
 
+
 //minify html
 gulp.task('html', () => {
   gulp.src('index.html')
@@ -33,7 +34,7 @@ gulp.task('html', () => {
 
 //compress and move image to public folder
 gulp.task('img', () => {
-  gulp.src('img/*.*')
+  gulp.src('img/*')
   .pipe(imageMin())
   .pipe(gulp.dest('public/img'))
   .pipe(browserSync.reload({
@@ -46,7 +47,7 @@ gulp.task('less', function() {
     return gulp.src('less/creative.less')
         .pipe(less())
         .pipe(header(banner, { pkg: pkg }))
-        .pipe(gulp.dest('css'))
+        .pipe(gulp.dest('public/css'))
         .pipe(browserSync.reload({
             stream: true
         }))
@@ -65,7 +66,7 @@ gulp.task('minify-css', ['less'], function() {
 
 // Minify JS
 gulp.task('minify-js', function() {
-    return gulp.src('js/creative.js')
+    return gulp.src('js/*')
         .pipe(uglify())
         .pipe(header(banner, { pkg: pkg }))
         .pipe(rename({ suffix: '.min' }))
