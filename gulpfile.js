@@ -35,7 +35,17 @@ gulp.task('html', () => {
 //compress and move image to public folder
 gulp.task('img', () => {
   gulp.src('img/*')
-  .pipe(imageMin())
+  .pipe(imageMin([
+    imageMin.gifsicle({interlaced: true}),
+    imageMin.jpegtran({progressive: true}),
+    imageMin.optipng({optimizationLevel: 5}),
+    imageMin.svgo({
+        plugins: [
+            {removeViewBox: true},
+            {cleanupIDs: false}
+        ]
+    })
+]))
   .pipe(gulp.dest('public/img'))
   .pipe(browserSync.reload({
     stream: true
