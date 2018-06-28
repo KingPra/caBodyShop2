@@ -26,7 +26,7 @@ gulp.task('html', () => {
     collapseWhitespace: true,
     removeComments: true
   }))
-  .pipe(gulp.dest('public/'))
+  .pipe(gulp.dest('cabodyshopllc.com/'))
   .pipe(browserSync.reload({
     stream: true
   }))
@@ -46,7 +46,7 @@ gulp.task('img', () => {
         ]
     })
 ]))
-  .pipe(gulp.dest('public/img'))
+  .pipe(gulp.dest('cabodyshopllc.com/img'))
   .pipe(browserSync.reload({
     stream: true
   }))
@@ -57,7 +57,7 @@ gulp.task('less', function() {
     return gulp.src('less/creative.less')
         .pipe(less())
         .pipe(header(banner, { pkg: pkg }))
-        .pipe(gulp.dest('public/css'))
+        .pipe(gulp.dest('css'))
         .pipe(browserSync.reload({
             stream: true
         }))
@@ -68,7 +68,7 @@ gulp.task('minify-css', ['less'], function() {
     return gulp.src('css/creative.css')
         .pipe(cleanCSS({ compatibility: 'ie8' }))
         .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest('public/css'))
+        .pipe(gulp.dest('cabodyshopllc.com/css'))
         .pipe(browserSync.reload({
             stream: true
         }))
@@ -80,7 +80,7 @@ gulp.task('minify-js', function() {
         .pipe(uglify())
         .pipe(header(banner, { pkg: pkg }))
         .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest('public/js'))
+        .pipe(gulp.dest('cabodyshopllc.com/js'))
         .pipe(browserSync.reload({
             stream: true
         }))
@@ -89,16 +89,16 @@ gulp.task('minify-js', function() {
 // Copy vendor libraries from /node_modules into /vendor
 gulp.task('copy', function() {
     gulp.src(['node_modules/bootstrap/dist/**/*', '!**/npm.js', '!**/bootstrap-theme.*', '!**/*.map'])
-        .pipe(gulp.dest('public/vendor/bootstrap'))
+        .pipe(gulp.dest('cabodyshopllc.com/vendor/bootstrap'))
 
     gulp.src(['node_modules/jquery/dist/jquery.js', 'node_modules/jquery/dist/jquery.min.js'])
-        .pipe(gulp.dest('public/vendor/jquery'))
+        .pipe(gulp.dest('cabodyshopllc.com/vendor/jquery'))
 
     gulp.src(['node_modules/magnific-popup/dist/*'])
-        .pipe(gulp.dest('public/vendor/magnific-popup'))
+        .pipe(gulp.dest('cabodyshopllc.com/vendor/magnific-popup'))
 
     gulp.src(['node_modules/scrollreveal/dist/*.js'])
-        .pipe(gulp.dest('public/vendor/scrollreveal'))
+        .pipe(gulp.dest('cabodyshopllc.com/vendor/scrollreveal'))
 
     gulp.src([
             'node_modules/font-awesome/**',
@@ -108,7 +108,7 @@ gulp.task('copy', function() {
             '!node_modules/font-awesome/*.md',
             '!node_modules/font-awesome/*.json'
         ])
-        .pipe(gulp.dest('public/vendor/font-awesome'))
+        .pipe(gulp.dest('cabodyshopllc.com/vendor/font-awesome'))
 })
 
 // Run everything
@@ -118,7 +118,7 @@ gulp.task('default', ['html', 'less', 'minify-css', 'minify-js', 'copy']);
 gulp.task('browserSync', function() {
     browserSync.init({
         server: {
-            baseDir: 'public'
+            baseDir: 'cabodyshopllc.com'
         },
     })
 })
