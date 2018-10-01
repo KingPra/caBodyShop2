@@ -231,6 +231,7 @@ header .header-content .header-content-inner p {
 }
 .portfolio-box .img-responsive {
   height: 550px;
+  width: 100%;
   object-fit: cover;
 }
 .portfolio-box .portfolio-box-caption {
