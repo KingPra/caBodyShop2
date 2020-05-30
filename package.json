@@ -9,29 +9,52 @@
     "url": "https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE"
   },
   "devDependencies": {
-    "bootstrap": "^4.1.2",
-    "browser-sync": "^2.24.7",
+    "bootstrap": "^4.5.0",
+    "browser-sync": "^2.26.7",
     "font-awesome": "^4.6.3",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-clean-css": "^2.0.10",
     "gulp-header": "^1.8.7",
     "gulp-less": "^4.0.1",
     "gulp-rename": "^1.4.0",
     "gulp-uglify": "^1.5.4",
     "gulp-util": "^3.0.8",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.1",
     "magnific-popup": "^1.1.0",
     "scrollreveal": "^3.1.4",
-    "vinyl-ftp": "^0.6.1"
+    "vinyl-ftp": "^0.6.1",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-hot-middleware": "^2.25.0"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/BlackrockDigital/startbootstrap-creative.git"
   },
   "dependencies": {
+    "autoprefixer": "^9.8.0",
+    "child_process": "^1.0.2",
+    "cssnano": "^4.1.10",
+    "del": "^5.1.0",
+    "eslint": "^7.1.0",
+    "g": "^2.0.1",
     "gulp-cli": "github:gulpjs/gulp-cli",
+    "gulp-eslint": "^6.0.0",
     "gulp-htmlmin": "^4.0.0",
     "gulp-imagemin": "^4.1.0",
-    "update": "^0.7.4"
+    "gulp-newer": "^1.4.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-postcss": "^8.0.0",
+    "gulp-sass": "^4.1.0",
+    "imagemin": "^7.0.1",
+    "newer": "^0.1.5",
+    "plumber": "^0.4.8",
+    "postcss": "^7.0.31",
+    "rename": "^1.0.4",
+    "sass": "^1.26.7",
+    "update": "^0.7.4",
+    "webpack-stream": "^5.2.1"
   }
 }
