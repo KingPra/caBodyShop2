@@ -1,29 +1,39 @@
-"use strict"
+//converting gulp 3 to gulp 4
 
-// Load plugins
-const autoprefixer = require("autoprefixer");
+
+const gulp = require('gulp');
+const imagemin = require('gulp-imagemin');
+const concat = require('gulp-concat');
+const terser = require('gulp-terser');
+const sourcemaps = require('gulp-sourcemaps');
+const cssnano = require('cssnano');
+const htmlMin = require('gulp-htmlmin');
 const browsersync = require("browser-sync").create();
-const cp = require("child_process");
-const cssnano = require("cssnano");
-const del = require("del");
-const eslint = require("gulp-eslint");
-const gulp = require("gulp");
-const imagemin = require("gulp-imagemin");
-const newer = require("gulp-newer");
-const plumber = require("gulp-plumber");
-const postcss = require("gulp-postcss");
-const rename = require("gulp-rename");
-const sass = require("gulp-sass");
-const webpack = require("webpack");
-const webpackconfig = require("./webpack.config.js");
-const webpackstream = require("webpack-stream");
+const {src, series, parallel, dest, watch} = require('gulp');
+
+const htmlPath = './*.html'
+const jsPath = './js/*'
+const cssPath = './css/*'
+const lessPath = './less/*';
+const imgPath = './img/*';
+const vendorPath = './vendor/**/*';
+const dist = 'cabodyshopllc.com';
+
+
+//set banner content
+const banner = ['/*!\n',
+    ' * Start Bootstrap - <%= pkg.title %> v<%= pkg.version %> (<%= pkg.homepage %>)\n',
+    ' * Copyright 2013-' + (new Date()).getFullYear(), ' <%= pkg.author %>\n',
+    ' * Licensed under <%= pkg.license.type %> (<%= pkg.license.url %>)\n',
+    ' */\n',
+    ''
+].join('');
 
 //Browersync
-
 function browserSync(done) {
     browsersync.init({
         server: {
-            basedir: "./_site/"
+            basedir: "./"
         },
         port: 3000
     });
@@ -36,103 +46,66 @@ function browserSyncReload(done) {
     done();
 }
 
-//Clean assets
-function clean() {
-    return del(["./_site/assets/"]);
-}
-
-//Optimize Images
-function images() {
-    return gulp
-    .src("./assets/img/**/*")
-    .pipe(newer("./_site/assets/img"))
-    .pipe(
-        imagemin([
-            imagemin.gifsicle({interlaced: true}),
-            imagemin.jpegtran({progrssive: true}),
-            imagemin.optipng({optimizationLevel: 5}),
-            imagemin.svgo({
-                plugins: [
-                    {
-                        removeViewBox: false,
-                        collapseGroups: true
-                    }
-                ]
-            })
-        ])
-    )
-    .pipe(gulp.dest("./_site/assets/img"));
-}
-
-//CSS task
-function css() {
-    return gulp
-    .src("./assets/scss/**/*.scss")
-    .pipe(plumber())
-    .pipe(sass({ outputStyle: "expanded"}))
-    .pipe(gulp.dest("./_site/assets/css/"))
-    .pipe(rename({ suffix: ".min"}))
-    .pipe(postcss([autoprefixer(), cssnano()]))
-    .pipe(gulp.dest("./_site/assts/css"))
+// copy and minify html
+function htmlTask() {
+    return src(htmlPath)
+    .pipe(htmlMin({
+        collapseWhitespace: true,
+        removeComments: true
+    }))
+    .pipe(dest(dist))
     .pipe(browsersync.stream());
 }
 
-//Lint scripts
-function scriptLint() {
-    return gulp
-    .src(["./assets/js/**/*", "./gulpfile.js"])
-    .pipe(plumber())
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
+//copy and minfy css
+function cssTask() {
+    return src(cssPath)
+    .pipe(cssnano())
+    .pipe(dest(`${dist}/css`))
+    .pipe(browsersync.stream());
 }
 
-//Transpile, concatenate and minify scripts
-function scripts() {
-    return (
-        gulp
-        .src(["./assets/js/**/*"])
-        .pipe(plumber())
-        .pipe(webpackstream(webpackconfig, webpack))
-        //folder only, filename is specified in webpack config
-        .pipe(gulp.dest("./_site/assets/js/"))
-        .pipe(browsersync.stream())
-    );
+//copy less
+function lessTask() {
+    return src(lessPath)
+    .pipe(dest(`${dist}/less`))
 }
 
-//Jekyll
-function jekyll() {
-    return cp.spawn("bundle", ["exec", "jekyll", "build"], {stdio: "inherit"});
+//copy vendor files
+function vendorTask() {
+    return src(vendorPath)
+    .pipe(dest(`${dist}/vendor`));
 }
 
-//Watch files 
-function watchFiles() {
-    gulp.watch("./assets/scss/**/*", css);
-    gulp.watch("./assets/js/**/*", gulp.series(scriptLint, scripts));
-    gulp.watch(
-        [
-            "./_includes/**/*",
-            "./_layouts?**/*",
-            "./_pages/**/*",
-            "./_posts/**/*",
-            "./_projects/**/*"
-        ],
-        gulp.series(jekyll, browserSyncReload)
-    );
-    gulp.watch("./assets/img/**/*", images);
+//copy and minify images
+function imageTask() {
+    return src(imgPath).pipe(imagemin()).pipe(gulp.dest(`${dist}/img`));
 }
 
-//define complex tasks
-const js = gulp.series(scriptLint, scripts);
-const build = gulp.series(clean, gulp.parallel(css, images, jekyll, js));
-const watch = gulp.parallel(watchFiles, browserSync);
+//copy and minify js (changed from uglify to terser)
+function jsTask() {
+    return src(jsPath)
+    //.pipe(sourcemaps.init())
+    //.pipe(concat('all.js'))
+    .pipe(terser())
+    //.pipe(sourcemaps.write('.'))
+    .pipe(dest(`${dist}/js`))
+    .pipe(browsersync.stream());
+}
 
-//export tasks
-exports.images = images;
-exports.css = css;
-exports.js = js;
-exports.jekyll = jekyll;
-exports.clean = clean;
-exports.build = build;
-exports.watch = watch;
-exports.default = build;
+// watch tasks and auto update when changes are made
+function watchTask() {
+    watch(
+        [cssPath, jsPath], {interval: 1000}, 
+        series(parallel(htmlTask, cssTask, jsTask), browserSyncReload));
+}
+
+exports.watchTask = watchTask;
+exports.lessTask = lessTask;
+exports.vendorTask = vendorTask;
+exports.jsTask = jsTask;
+exports.imageTask = imageTask;
+exports.htmlTask = htmlTask;
+exports.browserSync = browserSync;
+exports.browserSyncReload = browserSyncReload;
+exports.default = series(parallel(htmlTask, imageTask, jsTask, lessTask, vendorTask, browserSync), watchTask);
